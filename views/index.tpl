@@ -15,8 +15,8 @@
       {
         appId:"{{ app_id }}", 
         state:"{{ csrf }}", 
-        version:"{{ accountkit_version }}"
-        // fbAppEventsEnabled:true
+        version:"{{ accountkit_version }}",
+        fbAppEventsEnabled:true
       }
     );
   };
@@ -44,7 +44,7 @@
     // var phoneNumber = document.getElementById("phone_number").value;
     AccountKit.login(
       'PHONE', 
-      {countryCode: '', phoneNumber: ''}, // will use default values if not specified
+      {countryCode: '+1', phoneNumber: ''}, // will use default values if not specified
       loginCallback
     );
   }

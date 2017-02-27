@@ -12,7 +12,7 @@ app = bottle.app()
 app_id = os.environ.get('ACCOUNTKIT_APP_ID')
 app_secret = os.environ.get('ACCOUNTKIT_APP_SECRET')
 client_token = os.environ.get('ACCOUNTKIT_CLIENT_TOKEN')
-accountkit_version = 'v1.0'
+accountkit_version = 'v1.1'
 
 @bottle.route('/')
 def index():
@@ -26,6 +26,7 @@ def success():
     query_params = bottle.request.forms.decode()
 
     code = query_params.get('code')
+    csrf = query_params.get('csrf')
 
     token_url = 'https://graph.accountkit.com/'+accountkit_version+'/access_token'
     token_params = {'grant_type': 'authorization_code',
