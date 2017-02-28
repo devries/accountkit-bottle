@@ -5,6 +5,8 @@ import os
 import locale
 import hashlib
 import hmac
+import random
+import string
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 app = bottle.app()
@@ -13,12 +15,15 @@ app_id = os.environ.get('ACCOUNTKIT_APP_ID')
 app_secret = os.environ.get('ACCOUNTKIT_APP_SECRET')
 client_token = os.environ.get('ACCOUNTKIT_CLIENT_TOKEN')
 accountkit_version = 'v1.1'
+cookie_secret = os.environ.get('COOKIE_SECRET', 'secret_password')
 
 @bottle.route('/')
 def index():
+    csrf_token = ''.join(random.choice(string.ascii_uppercase+string.digits) for x in range(32))
+    bottle.response.set_cookie('csrf', csrf_token, secret=cookie_secret)
     return bottle.template('index',
             app_id=app_id,
-            csrf = 'DEADBEEF',
+            csrf = csrf_token,
             accountkit_version = accountkit_version)
 
 @bottle.route('/success', method='POST')
@@ -27,6 +32,11 @@ def success():
 
     code = query_params.get('code')
     csrf = query_params.get('csrf')
+
+    cookie_csrf = bottle.request.get_cookie('csrf', secret=cookie_secret)
+
+    if csrf!=cookie_csrf:
+        bottle.abort(401, 'CSRF Token Mismatch')
 
     token_url = 'https://graph.accountkit.com/'+accountkit_version+'/access_token'
     token_params = {'grant_type': 'authorization_code',
