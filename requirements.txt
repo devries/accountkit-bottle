@@ -1,7 +1,7 @@
-bottle==0.12.13
-certifi==2018.10.15
+bottle==0.12.16
+certifi==2019.3.9
 chardet==3.0.4
-gunicorn==19.6.0
-idna==2.7
-requests==2.20.0
-urllib3==1.24.1
+gunicorn==19.9.0
+idna==2.8
+requests==2.21.0
+urllib3==1.24.3
